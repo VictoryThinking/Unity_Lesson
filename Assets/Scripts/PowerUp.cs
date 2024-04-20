@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    public PowerUpSpec mySpec;
+    public PowerUpSpec[] mySpecs;
+    public int startingSpec;
     public Vector3 size;
     private Renderer m_Renderer;
     public void SetPowerUpSpec(PowerUpSpec spec)
@@ -18,7 +19,8 @@ public class PowerUp : MonoBehaviour
     void Start()
     {
         m_Renderer = GetComponent<Renderer>();
-        SetPowerUpSpec(mySpec);
+        startingSpec = Random.Range(0, mySpecs.Length);
+        SetPowerUpSpec(mySpecs[startingSpec]);
 
         this.transform.localScale = size;
     }
@@ -35,7 +37,21 @@ public class PowerUp : MonoBehaviour
             if (playerHit != null)
             {
                 Debug.Log("found player");
-                playerHit.SetPlayerSpec(mySpec.defaultSpec);
+
+                //check is player already has power ups
+                if (playerHit.currentType != PowerUpTypes.Types.GREY)
+                {
+                    //if player has power up, set to specified power up combination
+                    playerHit.SetPlayerSpec(mySpecs[startingSpec].combinations[(int)playerHit.currentType]);
+                }
+                else
+                {
+                    //otherwise, set to default power up
+                    playerHit.SetPlayerSpec(mySpecs[startingSpec].defaultSpec);
+                    playerHit.currentType = mySpecs[startingSpec].myType;
+                }
+
+                Destroy(this.gameObject);
             }
         }
 

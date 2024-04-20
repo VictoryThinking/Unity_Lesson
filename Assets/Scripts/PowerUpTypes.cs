@@ -10,7 +10,7 @@ public class PowerUpTypes
         BLUE = 1,
         GREEN,
         YELLOW,
-
+        GREY,
     }
 }
 

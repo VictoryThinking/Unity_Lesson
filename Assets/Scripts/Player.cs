@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private Renderer myRenderer;
     public PlayerSpec initial_spec;
     public PlayerSpec attack_spec;
+    public PowerUpTypes.Types currentType = PowerUpTypes.Types.GREY;
+
     // Start is called before the first frame update
 
     void Start()
