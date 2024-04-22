@@ -8,8 +8,11 @@ public class Player : MonoBehaviour
     public float movement_speed;
     private Renderer myRenderer;
     public PlayerSpec initial_spec;
-    public PlayerSpec attack_spec;
+    public PlayerSpec current_spec;
     public PowerUpTypes.Types currentType = PowerUpTypes.Types.GREY;
+
+    private float firingDelay = 0f;
+
 
     // Start is called before the first frame update
 
@@ -28,18 +31,14 @@ public class Player : MonoBehaviour
         InputLoop();
         PlayerMovement();
 
-        // placeholder test
-        // changes player values based on spec
-        if (player_input.attack_pressed)
+        if (player_input.attack_hold)
         {
-            SetPlayerSpec(attack_spec);
-
+            if (firingDelay == 0f)
+            {
+                ShootBullet();
+            }
         }
-        if (player_input.jump_pressed)
-        {
-            SetPlayerSpec(initial_spec);
-
-        }
+        firingDelay = Mathf.Clamp(firingDelay - 0.5f, 0f, firingDelay);
     }
 
     public void InputLoop()
@@ -72,7 +71,7 @@ public class Player : MonoBehaviour
             player_input.left_stick.x = -1f;
         }
 
-        //Check buttons
+        // Check buttons
         if (Input.GetKeyDown(KeyCode.J))
         {
             player_input.jump_pressed = true;
@@ -88,6 +87,24 @@ public class Player : MonoBehaviour
         else
         {
             player_input.attack_pressed = false;
+        }
+
+        // if key is held
+        if (Input.GetKey(KeyCode.J))
+        {
+            player_input.jump_hold = true;
+        }
+        else
+        {
+            player_input.jump_hold = false;
+        }
+        if (Input.GetKey(KeyCode.K))
+        {
+            player_input.attack_hold = true;
+        }
+        else
+        {
+            player_input.attack_hold = false;
         }
     }
 
@@ -106,5 +123,14 @@ public class Player : MonoBehaviour
         myRenderer.material.color = spec.player_color;
         this.transform.localScale = spec.player_scale;
         movement_speed = spec.player_speed;
+        current_spec = spec;
+    }
+
+    public void ShootBullet()
+    {
+        Bullet spawnedBullet;
+        spawnedBullet = Instantiate(current_spec.bullet, this.transform.position, Quaternion.identity).GetComponent<Bullet>();
+        spawnedBullet.initialDirection = this.transform.right;
+        firingDelay = current_spec.fire_delay;
     }
 }

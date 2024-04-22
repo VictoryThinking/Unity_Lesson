@@ -15,3 +15,5 @@ MonoBehaviour:
   player_color: {r: 0, g: 0.11449838, b: 1, a: 0}
   player_scale: {x: 1.2, y: 1.7, z: 1.2}
   player_speed: 8
+  bullet: {fileID: 76962125552155663, guid: fd68ff56fcee6554d9c6be1aa27b2cb1, type: 3}
+  fire_delay: 10

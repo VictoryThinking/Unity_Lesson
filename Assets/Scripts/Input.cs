@@ -5,12 +5,13 @@ using UnityEngine;
 
 // input variable container or variables
 [Serializable]
-public class PlayerInput
+public struct PlayerInput
 {
     public Vector2 left_stick;
     public bool jump_pressed;
     public bool attack_pressed;
-
+    public bool jump_hold;
+    public bool attack_hold;
 
 
 }

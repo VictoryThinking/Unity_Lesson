@@ -29,26 +29,26 @@ public class PowerUp : MonoBehaviour
     void Update()
     {
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, size.x * 0.5f);
-        foreach (var hitCollider in hitColliders)
+        foreach (var hit in hitColliders)
         {
             Debug.Log("found hit");
-            Player playerHit;
-            playerHit = hitCollider.GetComponent<Player>();
-            if (playerHit != null)
+            Player playerThatWasHit;
+            playerThatWasHit = hit.GetComponent<Player>();
+            if (playerThatWasHit != null)
             {
                 Debug.Log("found player");
 
                 //check is player already has power ups
-                if (playerHit.currentType != PowerUpTypes.Types.GREY)
+                if (playerThatWasHit.currentType != PowerUpTypes.Types.GREY)
                 {
                     //if player has power up, set to specified power up combination
-                    playerHit.SetPlayerSpec(mySpecs[startingSpec].combinations[(int)playerHit.currentType]);
+                    playerThatWasHit.SetPlayerSpec(mySpecs[startingSpec].combinations[(int)playerThatWasHit.currentType]);
                 }
                 else
                 {
                     //otherwise, set to default power up
-                    playerHit.SetPlayerSpec(mySpecs[startingSpec].defaultSpec);
-                    playerHit.currentType = mySpecs[startingSpec].myType;
+                    playerThatWasHit.SetPlayerSpec(mySpecs[startingSpec].defaultSpec);
+                    playerThatWasHit.currentType = mySpecs[startingSpec].myType;
                 }
 
                 Destroy(this.gameObject);

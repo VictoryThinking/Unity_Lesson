@@ -9,5 +9,7 @@ public class PlayerSpec : ScriptableObject
     public Color player_color;
     public Vector3 player_scale;
     public float player_speed;
+    public GameObject bullet;
+    public float fire_delay;
 }
 
