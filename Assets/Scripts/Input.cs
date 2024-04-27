@@ -12,6 +12,7 @@ public struct PlayerInput
     public bool attack_pressed;
     public bool jump_hold;
     public bool attack_hold;
+    public bool mouse_held;
 
 
 }

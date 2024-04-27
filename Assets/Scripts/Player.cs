@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         InputLoop();
         PlayerMovement();
 
-        if (player_input.attack_hold)
+        if (player_input.mouse_held)
         {
             if (firingDelay == 0f)
             {
@@ -43,6 +43,15 @@ public class Player : MonoBehaviour
 
     public void InputLoop()
     {
+        if (Input.GetMouseButton(0))
+        {
+            player_input.mouse_held = true;
+        }
+        else
+        {
+            player_input.mouse_held = false;
+        }
+
         //check Y axis
         if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
         {
@@ -130,7 +139,15 @@ public class Player : MonoBehaviour
     {
         Bullet spawnedBullet;
         spawnedBullet = Instantiate(current_spec.bullet, this.transform.position, Quaternion.identity).GetComponent<Bullet>();
-        spawnedBullet.initialDirection = this.transform.right;
         firingDelay = current_spec.fire_delay;
+
+        Vector3 bulletVector = Camera.main.WorldToScreenPoint(this.transform.position);
+        bulletVector = Input.mousePosition - bulletVector;
+        spawnedBullet.initialDirection = bulletVector.normalized;
+        float angle = Mathf.Atan2(bulletVector.y, bulletVector.x) * Mathf.Rad2Deg;
+        spawnedBullet.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        //Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //spawnedBullet.transform.LookAt(mouseWorldPos, Vector3.up);
+
     }
 }

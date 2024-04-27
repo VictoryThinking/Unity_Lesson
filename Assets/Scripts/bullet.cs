@@ -29,6 +29,6 @@ public class Bullet : MonoBehaviour
 
     public void Move()
     {
-        this.transform.Translate(initialDirection * (speed * Time.deltaTime));
+        this.transform.Translate(initialDirection * (speed * Time.deltaTime), Space.World);
     }
 }
