@@ -9,7 +9,19 @@ public class Player : MonoBehaviour
     private Renderer myRenderer;
     public PlayerSpec initial_spec;
     public PlayerSpec current_spec;
+    public PlayerSpec secondary_spec;
     public PowerUpTypes.Types currentType = PowerUpTypes.Types.GREY;
+
+
+    [Header("Player States")]
+    public State idle;
+    public State running;
+    public State shooting;
+
+    [HideInInspector]
+    public StateManager m_StateManager;
+
+
 
     private float firingDelay = 0f;
 
@@ -19,10 +31,12 @@ public class Player : MonoBehaviour
     void Start()
     {
         myRenderer = GetComponent<Renderer>();
+        m_StateManager = GetComponent<StateManager>();
 
         //sets initial spec
         SetPlayerSpec(initial_spec);
 
+        m_StateManager.ChangeState(idle);
     }
 
     // Update is called once per frame
@@ -36,9 +50,12 @@ public class Player : MonoBehaviour
             if (firingDelay == 0f)
             {
                 ShootBullet();
+                m_StateManager.ChangeState(shooting);
             }
         }
         firingDelay = Mathf.Clamp(firingDelay - 0.5f, 0f, firingDelay);
+
+        m_StateManager.UpdateStates();
     }
 
     public void InputLoop()
@@ -141,8 +158,10 @@ public class Player : MonoBehaviour
         spawnedBullet = Instantiate(current_spec.bullet, this.transform.position, Quaternion.identity).GetComponent<Bullet>();
         firingDelay = current_spec.fire_delay;
 
+
         Vector3 bulletVector = Camera.main.WorldToScreenPoint(this.transform.position);
-        bulletVector = Input.mousePosition - bulletVector;
+        Vector3 normalizedMousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, bulletVector.z);
+        bulletVector = normalizedMousePos - bulletVector;
         spawnedBullet.initialDirection = bulletVector.normalized;
         float angle = Mathf.Atan2(bulletVector.y, bulletVector.x) * Mathf.Rad2Deg;
         spawnedBullet.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
