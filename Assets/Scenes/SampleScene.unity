@@ -520,7 +520,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateName: Idle
   m_Player: {fileID: 0}
-  idleSize: {x: 3, y: 3, z: 3}
+  idleSize: {x: 1, y: 2, z: 1}
+  moveSpeed: 8
 --- !u!114 &2091370447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,6 +537,7 @@ MonoBehaviour:
   states:
   - {fileID: 2091370446}
   - {fileID: 2091370448}
+  - {fileID: 2091370454}
   currentState: {fileID: 2091370446}
   previousState: {fileID: 2091370446}
 --- !u!114 &2091370448
@@ -555,6 +557,27 @@ MonoBehaviour:
   shootingSize: {x: 1.5, y: 1.5, z: 1.5}
   fire_Cooldown: 1
   timer: 0
+  moveSpeed: 3
+--- !u!114 &2091370454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091370440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba48f69bdc888a144959dcb588ccf33d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: Dash
+  m_Player: {fileID: 0}
+  dashSize: {x: 1, y: 1, z: 1}
+  dashSpeed: 25
+  dashDuration: 0.3
+  dashCooldown: 1
+  dashDirection: {x: 0, y: 0, z: 0}
+  dashTimer: 0
 --- !u!1001 &5317750957266082167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -604,6 +627,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3373318228826164464, guid: 64d688f3ca3f5fa43a20beb1c50c80b2, type: 3}
+      propertyPath: dash
+      value: 
+      objectReference: {fileID: 2091370454}
+    - target: {fileID: 3373318228826164464, guid: 64d688f3ca3f5fa43a20beb1c50c80b2, type: 3}
       propertyPath: idle
       value: 
       objectReference: {fileID: 2091370446}
@@ -628,6 +655,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3383881143316349249, guid: 64d688f3ca3f5fa43a20beb1c50c80b2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2091370448}
+    - targetCorrespondingSourceObject: {fileID: 3383881143316349249, guid: 64d688f3ca3f5fa43a20beb1c50c80b2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2091370454}
   m_SourcePrefab: {fileID: 100100000, guid: 64d688f3ca3f5fa43a20beb1c50c80b2, type: 3}
 --- !u!1001 &5882170585028187425
 PrefabInstance:

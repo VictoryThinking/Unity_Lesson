@@ -17,13 +17,16 @@ public class Player : MonoBehaviour
     public State idle;
     public State running;
     public State shooting;
+    public State dash;
 
     [HideInInspector]
     public StateManager m_StateManager;
 
 
+    [HideInInspector]
+    public float firingDelay = 0f;
 
-    private float firingDelay = 0f;
+    public float dashDelay = 0f;
 
 
     // Start is called before the first frame update
@@ -43,17 +46,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         InputLoop();
-        PlayerMovement();
+        //PlayerMovement();
+        dashDelay = Mathf.Clamp(dashDelay - Time.deltaTime, 0f, dashDelay);
+        firingDelay = Mathf.Clamp(firingDelay - Time.deltaTime, 0f, firingDelay);
 
-        if (player_input.mouse_held)
-        {
-            if (firingDelay == 0f)
-            {
-                ShootBullet();
-                m_StateManager.ChangeState(shooting);
-            }
-        }
-        firingDelay = Mathf.Clamp(firingDelay - 0.5f, 0f, firingDelay);
+
+
 
         m_StateManager.UpdateStates();
     }
@@ -114,6 +112,14 @@ public class Player : MonoBehaviour
         {
             player_input.attack_pressed = false;
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            player_input.dash_pressed = true;
+        }
+        else
+        {
+            player_input.dash_pressed = false;
+        }
 
         // if key is held
         if (Input.GetKey(KeyCode.J))
@@ -135,20 +141,14 @@ public class Player : MonoBehaviour
     }
 
     //Formula to move player in 2D
-    public void PlayerMovement()
+    public void PlayerMovement(Vector3 direction)
     {
-        Vector3 movement_vector;
-        movement_vector.x = movement_speed * player_input.left_stick.x;
-        movement_vector.y = movement_speed * player_input.left_stick.y;
-        movement_vector.z = 0f;
-        this.transform.Translate(movement_vector * Time.deltaTime, Space.Self);
+        this.transform.Translate((direction * movement_speed) * Time.deltaTime, Space.Self);
     }
 
     public void SetPlayerSpec(PlayerSpec spec)
     {
         myRenderer.material.color = spec.player_color;
-        this.transform.localScale = spec.player_scale;
-        movement_speed = spec.player_speed;
         current_spec = spec;
     }
 
@@ -168,5 +168,29 @@ public class Player : MonoBehaviour
         //Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //spawnedBullet.transform.LookAt(mouseWorldPos, Vector3.up);
 
+    }
+
+    public void CheckShoot()
+    {
+        if (player_input.mouse_held)
+        {
+            if (firingDelay == 0f)
+            {
+                ShootBullet();
+                m_StateManager.ChangeState(shooting);
+            }
+        }
+    }
+
+
+    public void CheckDash()
+    {
+        if (player_input.dash_pressed)
+        {
+            if (dashDelay == 0f)
+            {
+                m_StateManager.ChangeState(dash);
+            }
+        }
     }
 }

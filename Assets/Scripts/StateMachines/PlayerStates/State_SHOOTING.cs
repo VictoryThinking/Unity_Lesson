@@ -9,6 +9,7 @@ public class State_SHOOTING : State
     public Vector3 shootingSize;
     public float fire_Cooldown;
     public float timer;
+    public float moveSpeed;
 
     public void Start()
     {
@@ -17,12 +18,19 @@ public class State_SHOOTING : State
 
     public override void OnEnter()
     {
+        m_Player.movement_speed = moveSpeed;
         timer = fire_Cooldown;
         Debug.Log("Shooting entered");
     }
     public override void UpdateState()
     {
-        this.transform.localScale = shootingSize;
+        Vector3 movement_vector;
+        movement_vector.x = m_Player.player_input.left_stick.x;
+        movement_vector.y = m_Player.player_input.left_stick.y;
+        movement_vector.z = 0f;
+        m_Player.PlayerMovement(movement_vector);
+        m_Player.CheckShoot();
+        m_Player.CheckDash();
         timer -= Time.deltaTime;
 
         State transition = CheckTransition();
